@@ -10,6 +10,6 @@
 😼Zian Zhag
 ### 🔗Related Links
 [📦Project Executing](https://dilemmagx.github.io/PACSSR-301004/lantern.html)
-[🖥️Source Code](https://github.com/DilemmaGX/PACSSR-301004)
-[📺Screengrab Video]()
+[🖥️View Source Code](https://github.com/DilemmaGX/PACSSR-301004)
+[📺Screengrab Video](https://dilemmagx.github.io/PACSSR-301004/video.mp4)
 [📄Presentation PDF]()
