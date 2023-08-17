@@ -8,7 +8,7 @@
 🙀Binghao Ye
 😼Zian Zhag
 ### 🔗Related Links
-[📦Project Executing](./project/lantern.html)
-[🖥️Source Code]()
+[📦Project Executing](https://dilemmagx.github.io/PACSSR-301004/lantern.html)
+[🖥️Source Code](https://github.com/DilemmaGX/PACSSR-301004)
 [📺Screengrab Video]()
 [📄Presentation PDF]()
