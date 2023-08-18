@@ -1,0 +1,288 @@
+<!-- adapted from https://threejs.org/examples/webgl_loader_stl and https://sbcode.net/threejs/loaders-stl/ -->
+
+<!--
+a. copy and save all of this, into your own .html, eg. fun.html
+b. create an img/ folder, place 6 cubemap photos (eg of your room!)
+c. edit fun.html, remove 'https://bytes.usc.edu/~saty/tools/xem/x/THREE-STLLoader/' 6 times [so you only have img/...]
+d. create models/your-model.stl
+e. edit fun.html, remove https://bytes.usc.edu/~saty/... in the loader.load() call, instead put in models/your-model.stl
+f. load fun.html into your browser - ta-da!!
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <title>STL loader</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+      <script src="https://unpkg.com/three@0.146.0/build/three.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src="https://unpkg.com/three@0.146.0/examples/js/loaders/STLLoader.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+      <script src="https://unpkg.com/three@0.146.0/examples/js/controls/OrbitControls.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+   </head>
+   <body>
+
+
+      <script>
+        
+         const scene = new THREE.Scene(); 
+         scene.add(new THREE.AxesHelper(2)); // cmt this out if you like...
+         //@D
+         scene.background = new THREE.Color(0x72645b);
+         //scene.fog = new THREE.Fog(0x72645b, 300, 200);
+         scene.add(new THREE.AxesHelper(30));
+         //
+
+        //ground @D
+         const plane = new THREE.Mesh(
+         new THREE.PlaneGeometry( 400, 400 ),
+         new THREE.MeshPhongMaterial( { color: 0xcbcbcb, specular: 0x474747 } )
+         );
+         plane.rotation.x = - Math.PI / 2;
+         plane.position.y = - 150;
+         scene.add( plane );
+         plane.receiveShadow = true;
+         //
+
+         //lighting
+
+         //@D
+         const pointlight1 = new THREE.PointLight(0xffffff,0.5,0,0);
+         pointlight1.position.set(70, 220, 5);
+         pointlight1.distance = 0.0;
+         pointlight1.castShadow = true;
+         scene.add(pointlight1);
+         //
+
+         const pointlight = new THREE.PointLight(0xec4e46,0.3,300,1.1);
+         pointlight.position.set(0, 0, 0);
+         scene.add(pointlight);
+         //const ambientlight = new THREE.AmbientLight( 0xf0af6f, 0.4);
+         //scene.add(ambientlight);
+         
+         
+
+         //camera
+         const camera = new THREE.PerspectiveCamera(
+             75,
+             window.innerWidth / window.innerHeight,
+             0.1,
+             10000
+         );
+         //initial camera position
+         camera.position.z = 150;
+         camera.position.x = 150;
+         
+         
+        
+        
+         const renderer = new THREE.WebGLRenderer();
+         renderer.outputEncoding = THREE.sRGBEncoding;
+         renderer.setSize(window.innerWidth, window.innerHeight);
+         //@D
+         renderer.shadowMap.enabled = true;
+         renderer.shadowMap.type = THREE.PCFSoftShadowMap;   
+         //
+         document.body.appendChild(renderer.domElement);
+         //controls
+         const controls = new THREE.OrbitControls(camera, renderer.domElement);
+         controls.enableDamping = true;
+        
+         //texture
+         const redTexture = new THREE.CubeTextureLoader().load([
+             'lantern00.png',
+             'lantern00.png',
+             'lantern00.png',
+             'lantern00.png',
+             'lantern00.png',
+             'lantern00.png'
+         ]);
+         redTexture.mapping = THREE.CubeReflectionMapping;
+
+         let material;
+         const textureLoader = new THREE.TextureLoader();
+         
+         
+
+         lanternBodyText = new THREE.MeshPhysicalMaterial({
+             color: 0xe60000,
+             envMap: redTexture,
+             metalness: 0.00,
+             roughness: 1.0,
+             opacity: 1.0,
+             transparent: true,
+             transmission: 0.7,
+             clearcoat: 1.0,
+             clearcoatRoughness: 0.25
+         });
+
+         const goldTexture = new THREE.CubeTextureLoader().load([
+             'Metal034_1K_Color.png',
+             'Metal034_1K_Color.png',
+             'Metal034_1K_Color.png',
+             'Metal034_1K_Color.png',
+             'Metal034_1K_Color.png',
+             'Metal034_1K_Color.png'
+         ]);
+         goldTexture.mapping = THREE.CubeReflectionMapping;
+         
+         //const goldROughness = textureLoader.load('Metal034_1K_Roughness.png');
+         //const goldDisplacement = textureLoader.load('Metal034_1K_Displacement.png');
+         const goldBaseColor = textureLoader.load('Metal034_1K_Color.png');
+         const goldNormalDX = textureLoader.load('Metal034_1K_NormalDX.png');
+         const goldMetalness = textureLoader.load('Metal034_1K_Metalness.png');
+         lanternFrameText = new THREE.MeshPhysicalMaterial({
+             color: 0xffb900,
+             map:goldBaseColor,
+             normalMap: goldNormalDX,
+             metalnessMap:goldMetalness,
+             roughness: 0.2,
+             opacity: 0.9,
+             transparent: false,
+             transmission: 1.0,
+             clearcoat: 1.0,
+             clearcoatRoughness: 0.25
+         });
+
+         const woodTexture = new THREE.CubeTextureLoader().load([
+             'Wood066_1K_Color.png',
+             'Wood066_1K_Color.png',
+             'Wood066_1K_Color.png',
+             'Wood066_1K_Color.png',
+             'Wood066_1K_Color.png',
+             'Wood066_1K_Color.png'
+         ]);
+         woodTexture.mapping = THREE.CubeReflectionMapping;
+         
+         
+         const woodBaseColor = textureLoader.load('Wood066_1K_Color.png');
+         const woodNormalDX = textureLoader.load('Wood066_1K_NormalDX.png');
+         //const woodROughness = textureLoader.load('Wood066_1K_Roughness.png');
+         
+         topWoodText = new THREE.MeshPhysicalMaterial({
+             
+             map: woodBaseColor,
+             normalMap: woodNormalDX,
+             
+             
+         });
+
+         
+
+         
+         //stl
+         const redStl = new THREE.STLLoader();
+         redStl.load(
+             'lanternRed.stl',
+             function (geometry) {
+                 const mesh = new THREE.Mesh(geometry, lanternBodyText)
+                 mesh.rotation.x -=1.6;
+                 mesh.rotation.z += 0.05;
+                 //@D
+                 mesh.castShadow = true;
+                 mesh.receiveShadow = true;
+                 //
+                 scene.add(mesh)
+             },
+             (xhr) => {
+                 console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+             },
+             (error) => {
+                 console.log(error)
+             }
+         );
+
+         const goldStl = new THREE.STLLoader();
+         goldStl.load(
+             'lanternGold.stl',
+             function (geometry) {
+                 const mesh = new THREE.Mesh(geometry, lanternFrameText)
+                 mesh.rotation.x -=1.6;
+                 mesh.rotation.z += 0.05;
+                 //@D
+                 mesh.castShadow = true;
+                 mesh.receiveShadow = true;
+                 //
+                 scene.add(mesh)
+             },
+             (xhr) => {
+                 console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+             },
+             (error) => {
+                 console.log(error)
+             }
+         );
+
+         const topWood = new THREE.STLLoader();
+         topWood.load(
+             'set.stl',
+             function (geometry) {
+                 const mesh = new THREE.Mesh(geometry, topWoodText)
+                 mesh.rotation.x -=1.6;
+                 mesh.rotation.z += 0.05;
+                 //@D
+                 mesh.castShadow = true;
+                 mesh.receiveShadow = true;
+                 //
+                 scene.add(mesh)
+             },
+             (xhr) => {
+                 console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+             },
+             (error) => {
+                 console.log(error)
+             }
+         );
+         // for fun, above, change colored.stl to CharlotteValve.stl, 
+         // and also change 
+         // *4 below, twice, to *120, and do globe.stl, with *10 :)
+         
+         window.addEventListener('resize', onWindowResize, false);
+         function onWindowResize() {
+             camera.aspect = window.innerWidth / window.innerHeight
+             camera.updateProjectionMatrix()
+             renderer.setSize(window.innerWidth, window.innerHeight)
+             render()
+         };
+         
+         //const stats = Stats()
+         //document.body.appendChild(stats.dom)
+
+        //shader
+        //  var runtime = new ShaderFrogRuntime();
+        //  var clock = new THREE.Clock();
+        //  runtime.load( 'New_C2.json', function( shaderData ) {
+        //     // Get the Three.js material you can assign to your objects
+        //     var material = runtime.get( shaderData.name );
+        //     // Assign it to your objects
+        //     mesh.material = material;
+        // });
+        // runtime.registerCamera( camera );
+
+        
+         function animate() {
+             requestAnimationFrame(animate);
+             
+             controls.update();
+             render();
+             //stats.update()
+         }
+         
+         function render() {
+         
+             //const timer = Date.now()*0.0005;
+             //camera.position.x = Math.cos(timer)*200;
+             //camera.position.z = Math.sin(timer)*200;
+             //camera.position.y = Math.sin(timer)*80;
+             //camera.rotation.x = 90 * Math.PI / 180;
+
+             controls.autoRotate = true;
+             controls.autoRotateSpeed = 2.1;
+             renderer.render(scene, camera);
+         }
+         
+         animate();
+         	
+      </script>
+   </body>
+</html>
