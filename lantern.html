@@ -76,7 +76,7 @@ f. load fun.html into your browser - ta-da!!
          
         
         
-         const renderer = new THREE.WebGLRenderer({antialias:true});
+         const renderer = new THREE.WebGLRenderer();
          renderer.outputEncoding = THREE.sRGBEncoding;
          renderer.setSize(window.innerWidth, window.innerHeight);
          //@D
@@ -87,8 +87,6 @@ f. load fun.html into your browser - ta-da!!
          //controls
          const controls = new THREE.OrbitControls(camera, renderer.domElement);
          controls.enableDamping = true;
-         //antialias
-         renderer.physicallyCorrectLights = true; 
         
          //texture
          const redTexture = new THREE.CubeTextureLoader().load([
